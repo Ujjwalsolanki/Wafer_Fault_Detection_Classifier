@@ -8,10 +8,6 @@ logging.basicConfig(
     datefmt='%H:%M:%S'
 )
 
-
-project_name = "mlProject"
-
-
 list_of_files = [
     # ".github/workflows/.gitkeep",
     f"src/__init__.py",
