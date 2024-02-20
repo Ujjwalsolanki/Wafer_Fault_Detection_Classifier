@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import os
 from pathlib import Path
 
 
@@ -10,4 +9,6 @@ class DataValidationConfig:
 
 @dataclass(frozen=True)
 class DataIngestionConfig:
-    pass
+    good_raw_data_path:Path = Path('validated_files/good/')
+    data_path:Path = Path('artifacts/data_csv')
+    validated_files_path = Path('validated_files')
