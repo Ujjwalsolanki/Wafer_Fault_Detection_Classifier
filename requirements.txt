@@ -9,4 +9,6 @@ ensure
 joblib
 Flask
 Flask-Cors
+pyarrow
+kneed
 -e .

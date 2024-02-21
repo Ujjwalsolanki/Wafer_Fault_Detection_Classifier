@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
-import logging
+from logger import logging
+
 
 logging.basicConfig(
     level=logging.INFO, 

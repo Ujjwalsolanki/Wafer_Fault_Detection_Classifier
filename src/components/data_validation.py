@@ -1,34 +1,35 @@
 
-from logger import get_logger
+
 import os
 import re
 import shutil
 import pandas as pd
-from src.utils.common import CommonClass
+from src.utils.file_methods import FileOperations
 from src.config.configuration import DataValidationConfig
+from logger import logging
+
 
 
 class RowDataValidation:
     def __init__(self):
-        self.logger = get_logger()
         self.data_validation_config = DataValidationConfig()
     
     def initiate_data_validation(self):
         try:
-            self.logger.info("Data validation started")
+            logging.info("Data validation started")
             length_of_date_stamp, length_of_time_stamp, column_names, number_of_columns = self.get_values_from_schema_file()
         
-            self.logger.info("File name validation started")
+            logging.info("File name validation started")
             self.validate_file_name(length_of_date_stamp, length_of_time_stamp)
 
-            self.logger.info("Column length validation started")
+            logging.info("Column length validation started")
             self.validate_column_length(number_of_columns)
 
-            self.logger.info("Missing value validation started")
+            logging.info("Missing value validation started")
             self.validate_missing_values()
 
         except Exception as e:
-            self.logger.exception(str(e))
+            logging.exception(str(e))
 
 
     def get_values_from_schema_file(self):
@@ -43,9 +44,8 @@ class RowDataValidation:
         :return:
         """
         try:
-            common_class = CommonClass()
-            schema = common_class.read_yaml(self.data_validation_config.schema_file)
-            print(schema)
+            file_op = FileOperations()
+            schema = file_op.read_yaml(self.data_validation_config.schema_file)
 
             length_of_date_stamp = schema.LengthOfDateStampInFile
             length_of_time_stamp = schema.LengthOfTimeStampInFile
@@ -53,21 +53,21 @@ class RowDataValidation:
             number_of_columns = schema.NumberOfColumns
 
             message = ("length_of_date_stamp:: %s" % length_of_date_stamp + "\t" + "length_of_time_stamp:: %s" %
-                       length_of_time_stamp + "\t " + "number_of_columns:: %s" % number_of_columns + "\n")
-            self.logger.info(message)
+                       length_of_time_stamp + "\t " + "number_of_columns:: %s" % number_of_columns)
+            logging.info(message)
 
             return length_of_date_stamp, length_of_time_stamp, column_names, number_of_columns
 
         except ValueError:
-            self.logger.exception("ValueError:Value not found inside schema_training.json")
+            logging.exception("ValueError:Value not found inside schema_training.json")
             raise ValueError
 
         except KeyError:
-            self.logger.exception("KeyError:Key value error incorrect key passed")
+            logging.exception("KeyError:Key value error incorrect key passed")
             raise KeyError
 
         except Exception as e:
-            self.logger.exception(str(e))
+            logging.exception(str(e))
             raise e
 
 
@@ -96,22 +96,22 @@ class RowDataValidation:
                             (len(split_file_name[2]) == length_of_time_stamp)):
 
                         shutil.copy("training_files/" + filename, "validated_files/good")
-                        self.logger.info("Valid File name!! File moved to Good Files Folder :: %s" % filename)
+                        logging.info("Valid File name!! File moved to Good Files Folder :: %s" % filename)
                     else:
                         shutil.copy("training_files/" + filename, "validated_files/bad")
-                        self.logger.info("Invalid File Name!! File moved to Bad Files Folder :: %s" % filename)
+                        logging.info("Invalid File Name!! File moved to Bad Files Folder :: %s" % filename)
                 else:
                     shutil.copy("training_files/" + filename, "validated_files/bad")
-                    self.logger.info("Invalid File Name!! File moved to Bad Files Folder :: %s" % filename)
+                    logging.info("Invalid File Name!! File moved to Bad Files Folder :: %s" % filename)
 
         except Exception as e:
-            self.logger.info("Error occurred while validating FileName %s" % e)
+            logging.info("Error occurred while validating FileName %s" % e)
             raise e
 
     def validate_column_length(self, number_of_columns):
 
         try:
-            self.logger.info("Column Length Validation Started!!")
+            logging.info("Column Length Validation Started!!")
 
             for file in os.listdir('validated_files/good/'):
                 csv = pd.read_csv("validated_files/good/" + file)
@@ -121,20 +121,21 @@ class RowDataValidation:
                 # pd.shape method will give us total rows and total columns in that file
                 if csv.shape[1] != number_of_columns:
                     shutil.move("validated_files/good/" + file, "validated_files/bad")
-                    self.logger.info("Invalid Column Length for the file!! File moved to Bad Files Folder :: %s" % file)
+                    logging.info("Invalid Column Length for the file!! File moved to Bad Files Folder :: %s" % file)
 
-            self.logger.info("Column Length Validation Completed!!")
+            logging.info("Column Length Validation Completed!!")
 
         except OSError:
-            self.logger.info("Error Occurred while moving the file :: %s" % OSError)
+            logging.info("Error Occurred while moving the file :: %s" % OSError)
             raise OSError
 
         except Exception as e:
-            self.logger.info("Error Occurred:: %s" % e)
+            logging.info("Error Occurred:: %s" % e)
             raise e
 
     def create_folders_good_data_bad_data(self):
         try:
+            os.makedirs("validated_files/", exist_ok=True)
             path = os.path.join("validated_files/", "good/")
             if not os.path.isdir(path):
                 os.makedirs(path)
@@ -143,7 +144,7 @@ class RowDataValidation:
                 os.makedirs(path)
 
         except OSError as ex:
-            self.logger.exception("Error while creating Directory %s:" % ex)
+            logging.exception("Error while creating Directory %s:" % ex)
             raise OSError
 
     def delete_bad_data_file_folders(self):
@@ -151,9 +152,9 @@ class RowDataValidation:
             path = 'validated_files/'
             if os.path.isdir(path + 'bad/'):
                 shutil.rmtree(path + 'bad/')
-                self.logger.info("Bad Files directory deleted before starting validation!!!")
+                logging.info("Bad Files directory deleted before starting validation!!!")
         except OSError as s:
-            self.logger.exception("Error while Deleting Directory : %s" % s)
+            logging.exception("Error while Deleting Directory : %s" % s)
             raise OSError
 
     def delete_good_data_file_folders(self):
@@ -161,14 +162,14 @@ class RowDataValidation:
             path = 'validated_files/'
             if os.path.isdir(path + 'good/'):
                 shutil.rmtree(path + 'good/')
-                self.logger.info("Good Files directory deleted before starting validation!!!")
+                logging.info("Good Files directory deleted before starting validation!!!")
         except OSError as s:
-            self.logger.exception("Error while Deleting Directory : %s" % s)
+            logging.exception("Error while Deleting Directory : %s" % s)
             raise OSError
 
     def validate_missing_values(self):
         try:
-            self.logger.info("Missing Values Validation Started!!")
+            logging.info("Missing Values Validation Started!!")
 
             for file in os.listdir('validated_files/good/'):
                 data = pd.read_csv("validated_files/good/" + file)
@@ -179,15 +180,15 @@ class RowDataValidation:
                         count += 1
                         shutil.move("validated_files/good/" + file,
                                     "validated_files/bad")
-                        self.logger.info("Invalid Column Length for the file!! File moved to Bad Raw Folder :: %s" % file)
+                        logging.info("Invalid Column Length for the file!! File moved to Bad Raw Folder :: %s" % file)
                         break
                 if count == 0:
                     data.rename(columns={"Unnamed: 0": "Wafer"}, inplace=True)
                     data.to_csv('validated_files/good/' + file, index=None, header=True)
 
         except OSError:
-            self.logger.exception("Error Occurred while moving the file :: %s" % OSError)
+            logging.exception("Error Occurred while moving the file :: %s" % OSError)
             raise OSError
         except Exception as e:
-            self.logger.exception("Error Occurred:: %s" % e)
+            logging.exception("Error Occurred:: %s" % e)
             raise e
