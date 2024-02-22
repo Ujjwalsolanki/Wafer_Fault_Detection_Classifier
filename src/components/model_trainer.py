@@ -1,10 +1,13 @@
 # Doing the necessary imports
+from pathlib import Path
 from sklearn.model_selection import train_test_split
 
 from src.components.data_loader import DataLoader
 from preprocessing_data.preprocessing import Preprocessor
 from preprocessing_data.clustering import KMeansClustering
 from logger import logging
+from src.components.model_finder import Model_Finder
+from src.utils.file_methods import FileOperations
 
 #Creating the common Logging object
 
@@ -71,16 +74,16 @@ class TrainModel:
                 cluster_label= cluster_data['Labels']
 
                 # splitting the data into training and test set for each cluster one by one
-                # x_train, x_test, y_train, y_test = train_test_split(cluster_features, cluster_label, test_size=1 / 3, random_state=355)
+                X_train, X_test, y_train, y_test = train_test_split(cluster_features, cluster_label, test_size=1 / 3, random_state=355)
 
-                # model_finder=tuner.Model_Finder(self.file_object,self.log_writer) # object initialization
+                model_finder=Model_Finder() # object initialization
 
                 #getting the best model for each of the clusters
-                # best_model_name,best_model=model_finder.get_best_model(x_train,y_train,x_test,y_test)
+                best_model_name,best_model=model_finder.get_best_model(X_train, X_test, y_train, y_test)
 
                 #saving the best model to the directory.
-                # file_op = file_methods.File_Operation(self.file_object,self.log_writer)
-                # save_model=file_op.save_model(best_model,best_model_name+str(i))
+                file_op = FileOperations()
+                file_op.save_model(best_model, Path('artifacts/models'), best_model_name+str(i))
 
             # logging the successful Training
             logging.info('Successful End of Training')

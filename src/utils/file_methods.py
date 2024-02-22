@@ -130,7 +130,7 @@ class FileOperations:
         return f"~ {size_in_kb} KB"
     
 
-    def save_model(self, model, path,  filename):
+    def save_model(self, model, path, filename):
         logging.info('Entered the save_model method of the File_Operation class')
         try:
             path = os.path.join(path,filename) #create seperate directory for each cluster

@@ -38,7 +38,7 @@ class KMeansClustering:
             logging.exception('Exception occured in elbow_plot method of the KMeansClustering class. Exception message:  ' + str(e))
             logging.exception('Finding the number of clusters failed. Exited the elbow_plot method of the KMeansClustering class')
             logging.exception(e)
-            raise Exception()
+            raise e
 
     def create_clusters(self,data,number_of_clusters):
         logging.info('Entered the create_clusters method of the KMeansClustering class')
@@ -58,4 +58,4 @@ class KMeansClustering:
         except Exception as e:
             logging.info('Exception occured in create_clusters method of the KMeansClustering class. Exception message:  ' + str(e))
             logging.info('Fitting the data to clusters failed. Exited the create_clusters method of the KMeansClustering class')
-            raise Exception(e)
+            raise e

@@ -11,4 +11,5 @@ Flask
 Flask-Cors
 pyarrow
 kneed
+xgboost
 -e .
