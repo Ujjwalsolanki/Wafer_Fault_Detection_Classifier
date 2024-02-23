@@ -162,5 +162,6 @@ cython_debug/
 logs/
 artifacts/
 validated_files/
+prediction_raw_files_validated/
 null_values.csv
 K-Means_Elbow.PNG
