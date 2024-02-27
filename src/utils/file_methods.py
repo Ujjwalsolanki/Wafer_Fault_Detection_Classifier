@@ -143,13 +143,12 @@ class FileOperations:
                 pickle.dump(model, f) # save the model to file
             logging.info('Model File '+filename+' saved. Exited the save_model method of the Model_Finder class')
 
-            return True
         except Exception as e:
             logging.exception('Exception occured in save_model method of the Model_Finder class. Exception message:  ' + str(e))
             logging.exception('Model File '+filename+' could not be saved. Exited the save_model method of the Model_Finder class')
             raise e
 
-    def load_model(self,file_name):
+    def load_model(self,file_name: str) -> Any:
         logging.info('Entered the load_model method of the File_Operation class')
         try:
             model_directory = "artifacts/models/"
@@ -162,7 +161,7 @@ class FileOperations:
             logging.exception('Model File ' + file_name + ' could not be saved. Exited the load_model method of the Model_Finder class')
             raise e
 
-    def find_correct_model_file(self,cluster_number):
+    def find_correct_model_file(self,cluster_number: int) -> str:
         logging.info('Entered the find_correct_model_file method of the File_Operation class')
         try:
             model_directory = "artifacts/models/"

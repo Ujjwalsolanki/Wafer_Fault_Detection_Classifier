@@ -8,7 +8,7 @@ from logger import logging
 
 
 class DataIngestion():
-    def __init__(self) -> None:
+    def __init__(self):
         self.data_ingestion_config = DataIngestionConfig()
 
     def create_master_data_file(self):

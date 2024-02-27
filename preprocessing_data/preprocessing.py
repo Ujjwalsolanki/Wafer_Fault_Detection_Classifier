@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.impute import KNNImputer
 from logger import logging
+from ensure import ensure_annotations
 
 
 
@@ -9,7 +10,8 @@ class Preprocessor:
     def __init__(self):
         pass
 
-    def remove_columns(self,data,columns):
+    @ensure_annotations
+    def remove_columns(self,data:pd.DataFrame, columns:list)->pd.DataFrame:
         
         logging.info('Entered the remove_columns method of the Preprocessor class')
         try:
@@ -23,7 +25,8 @@ class Preprocessor:
             logging.info(e)
             raise e
 
-    def separate_label_feature(self, data, label_column_name):
+    @ensure_annotations
+    def separate_label_feature(self, data:pd.DataFrame, label_column_name:list) -> tuple:
         try:
             logging.info('Entered the separate_label_feature method of the Preprocessor class')
             data = data.rename(columns={'Good/Bad': 'Output'})
@@ -37,7 +40,7 @@ class Preprocessor:
             logging.exception(e)
             raise e
 
-    def is_null_present(self,data): #this will check if null values
+    def is_null_present(self,data:list) -> bool: #this will check if null values
         logging.info('Entered the is_null_present method of the Preprocessor class')
         null_present = False
         try:
@@ -60,7 +63,7 @@ class Preprocessor:
             logging.exception('Finding missing values failed. Exited the is_null_present method of the Preprocessor class')
             raise e
 
-    def impute_missing_values(self, data):
+    def impute_missing_values(self, data:list)->list:
         logging.info( 'Entered the impute_missing_values method of the Preprocessor class')
         try:
             column_names = data.columns
@@ -76,7 +79,7 @@ class Preprocessor:
             logging.exception(e)
             raise e
 
-    def get_columns_with_zero_std_deviation(self,data):
+    def get_columns_with_zero_std_deviation(self,data:list)->list:
         logging.info( 'Entered the get_columns_with_zero_std_deviation method of the Preprocessor class')
         columns=data.columns
         data_n = data.describe()

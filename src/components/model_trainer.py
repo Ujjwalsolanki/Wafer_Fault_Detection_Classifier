@@ -32,7 +32,7 @@ class TrainModel:
             data=preprocessor.remove_columns(data,['Wafer']) # remove the unnamed column as it doesn't contribute to prediction.
 
             # create separate features and labels
-            X,Y=preprocessor.separate_label_feature(data,label_column_name='Output')
+            X,Y=preprocessor.separate_label_feature(data,label_column_name=['Output'])
 
             # check if missing values are present in the dataset
             is_null_present=preprocessor.is_null_present(X)

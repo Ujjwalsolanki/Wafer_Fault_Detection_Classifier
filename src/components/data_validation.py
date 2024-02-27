@@ -3,6 +3,7 @@
 import os
 import re
 import shutil
+from ensure import ensure_annotations
 import pandas as pd
 from src.utils.file_methods import FileOperations
 from src.config.configuration import DataValidationConfig
@@ -70,7 +71,7 @@ class RowDataValidation:
             logging.exception(str(e))
             raise e
 
-
+    @ensure_annotations
     def validate_file_name(self, length_of_date_stamp:int, length_of_time_stamp:int):
 
         regex = "['wafer']+['\_'']+[\d_]+[\d]+\.csv"
@@ -108,7 +109,7 @@ class RowDataValidation:
             logging.info("Error occurred while validating FileName %s" % e)
             raise e
 
-    def validate_column_length(self, number_of_columns):
+    def validate_column_length(self, number_of_columns: int):
 
         try:
             logging.info("Column Length Validation Started!!")
