@@ -165,3 +165,9 @@ validated_files/
 prediction_raw_files_validated/
 null_values.csv
 K-Means_Elbow.PNG
+prediction_output_files/
+.vscode
+prediction/data.csv
+
+
+

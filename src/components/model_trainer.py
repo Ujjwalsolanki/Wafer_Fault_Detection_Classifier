@@ -45,10 +45,10 @@ class TrainModel:
             # if the standard deviation for a column is zero, it means that the column has constant values
             # and they are giving the same output both for good and bad sensors
             # prepare the list of such columns to drop
-            cols_to_drop=preprocessor.get_columns_with_zero_std_deviation(X)
+            # cols_to_drop=preprocessor.get_columns_with_zero_std_deviation(X)
 
-            # drop the columns obtained above
-            X=preprocessor.remove_columns(X,cols_to_drop)
+            # # drop the columns obtained above
+            # X=preprocessor.remove_columns(X,cols_to_drop)
 
             """ Applying the clustering approach"""
 

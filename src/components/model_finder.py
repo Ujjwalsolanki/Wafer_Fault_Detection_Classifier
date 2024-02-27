@@ -60,7 +60,7 @@ class Model_Finder:
                 'max_depth': [3, 5, 10, 20],
                 'n_estimators': [10, 50, 100, 200]
             }
-            
+
             # Creating an object of the Grid Search class
             grid= GridSearchCV(self.xgb,param_grid_xgboost, verbose=3,cv=5)
             # finding the best parameters

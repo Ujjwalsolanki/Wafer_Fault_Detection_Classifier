@@ -147,38 +147,37 @@ class FileOperations:
         except Exception as e:
             logging.exception('Exception occured in save_model method of the Model_Finder class. Exception message:  ' + str(e))
             logging.exception('Model File '+filename+' could not be saved. Exited the save_model method of the Model_Finder class')
-            raise Exception()
+            raise e
 
-    def load_model(self,filename):
-        logging.info(self.file_object, 'Entered the load_model method of the File_Operation class')
+    def load_model(self,file_name):
+        logging.info('Entered the load_model method of the File_Operation class')
         try:
-            with open(self.model_directory + filename + '/' + filename + '.sav', 'rb') as f:
-                logging.info(self.file_object, 'Model File ' + filename + ' loaded. Exited the load_model method of the Model_Finder class')
-                return pickle.load(f)
+            model_directory = "artifacts/models/"
+            with open(model_directory + file_name + '/' + file_name + '.sav', 'rb') as f:
+                model = pickle.load(f)
+                logging.info('Model File ' + file_name + ' loaded. Exited the load_model method of the Model_Finder class')
+                return model
         except Exception as e:
             logging.exception('Exception occured in load_model method of the Model_Finder class. Exception message:  ' + str(e))
-            logging.exception('Model File ' + filename + ' could not be saved. Exited the load_model method of the Model_Finder class')
-            raise Exception()
+            logging.exception('Model File ' + file_name + ' could not be saved. Exited the load_model method of the Model_Finder class')
+            raise e
 
     def find_correct_model_file(self,cluster_number):
         logging.info('Entered the find_correct_model_file method of the File_Operation class')
         try:
-            self.cluster_number= cluster_number
-            self.folder_name=self.model_directory
-            self.list_of_model_files = []
-            self.list_of_files = os.listdir(self.folder_name)
-            for self.file in self.list_of_files:
-                try:
-                    if (self.file.index(str( self.cluster_number))!=-1):
-                        self.model_name=self.file
-                except:
-                    continue
-            self.model_name=self.model_name.split('.')[0]
+            model_directory = "artifacts/models/"
+            model_name = ""
+            folders = os.listdir(model_directory)
+            for folder in folders:
+                if (folder.endswith(str(cluster_number))):
+                    file = [f for f in os.listdir(model_directory+"/"+folder)]
+                    model_name=file[0].split('.')[0]
+                    print(model_name)
             logging.info('Exited the find_correct_model_file method of the Model_Finder class.')
-            return self.model_name
+            return model_name
         except Exception as e:
             logging.exception('Exception occured in find_correct_model_file method of the Model_Finder class. Exception message:  ' + str(e))
             logging.exception('Exited the find_correct_model_file method of the Model_Finder class with Failure')
-            raise Exception()
+            raise e
 
 
